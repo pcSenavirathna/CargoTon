@@ -6,7 +6,8 @@ import ClientLogos from "../components/ClientLogos";
 import Footer from "../components/Footer";
 import Stats from "../components/Stats";
 import TestimonialsWhyChoose from "../components/TestimonialsWhyChoose";
-import News from "../components/News";
+import News from '../components/News';
+
 
 const Index = () => {
   return (
