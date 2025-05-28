@@ -1,96 +1,120 @@
-
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 50) {
+        setShow(true);
+        setLastScrollY(window.scrollY);
+        return;
+      }
+      if (window.scrollY > lastScrollY) {
+        setShow(false); // scrolling down
+      } else {
+        setShow(true); // scrolling up
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="bg-yellow-500 text-white p-2 rounded-lg font-bold text-xl">
-              C
-            </div>
-            <span className="text-2xl font-bold text-gray-800">Cargo</span>
-            <span className="text-sm text-gray-500">PRO</span>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              HOME
-            </a>
-            <a href="#services" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              SERVICES
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              ABOUT
-            </a>
-            <a href="#tracking" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              TRACKING
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              CONTACT
-            </a>
-          </nav>
-
-          {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-50">
-              GET A QUOTE
-            </Button>
-            <Button className="bg-gray-800 hover:bg-gray-900">
-              SIGN IN
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={toggleMenu}
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </Button>
+    <header
+      className={`w-full border-b bg-white sticky top-0 z-50 transition-transform duration-300 ${show ? "translate-y-0" : "-translate-y-full"
+        }`}
+    >
+      <div className="container flex items-center justify-between py-4">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-xl tracking-wide">
+            Cargo{" "}
+            <span className="text-yellow-500">TON</span>
+          </span>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
-            <nav className="flex flex-col space-y-4 mt-4">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                HOME
+        {/* Navigation */}
+        <nav className="flex items-center gap-6">
+          <div className="flex gap-2">
+            {/* Home with yellow bar (always visible) */}
+            <div className="group flex items-center mr-4">
+              <span className="w-1 h-6 bg-yellow-400 mr-2 rounded hidden group-hover:block"></span>
+              <a
+                href="#"
+                className="font-bold text-sm tracking-widest uppercase text-black hover:text-yellow-500"
+                style={{ letterSpacing: "0.18em" }}
+              >
+                Home
+                <span className="ml-1 text-xs">&#9660;</span>
               </a>
-              <a href="#services" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                SERVICES
+            </div>
+            {/* Pages Dropdown */}
+            <div className="group flex items-center mr-4 relative">
+              <span className="w-1 h-6 bg-yellow-400 mr-2 rounded hidden group-hover:block absolute left-0"></span>
+              <button
+                className="font-bold text-sm tracking-widest uppercase text-black flex items-center gap-1 hover:text-yellow-500 pl-3"
+                style={{ letterSpacing: "0.18em" }}
+              >
+                Pages
+                <span className="ml-1 text-xs">&#9660;</span>
+              </button>
+            </div>
+            {/* Tracking */}
+            <div className="group flex items-center mr-4 relative">
+              <span className="w-1 h-6 bg-yellow-400 mr-2 rounded hidden group-hover:block absolute left-0"></span>
+              <a
+                href="#"
+                className="font-bold text-sm tracking-widest uppercase text-black hover:text-yellow-500 pl-3"
+                style={{ letterSpacing: "0.18em" }}
+              >
+                Tracking
+                <span className="ml-1 text-xs">&#9660;</span>
               </a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                ABOUT
-              </a>
-              <a href="#tracking" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                TRACKING
-              </a>
-              <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                CONTACT
-              </a>
-              <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="outline" className="border-yellow-500 text-yellow-600 hover:bg-yellow-50">
-                  GET A QUOTE
-                </Button>
-                <Button className="bg-gray-800 hover:bg-gray-900">
-                  SIGN IN
-                </Button>
-              </div>
-            </nav>
+            </div>
+            {/* Services Dropdown */}
+            <div className="group flex items-center mr-4 relative">
+              <span className="w-1 h-6 bg-yellow-400 mr-2 rounded hidden group-hover:block absolute left-0"></span>
+              <button
+                className="font-bold text-sm tracking-widest uppercase text-black flex items-center gap-1 hover:text-yellow-500 pl-3"
+                style={{ letterSpacing: "0.18em" }}
+              >
+                Services
+                <span className="ml-1 text-xs">&#9660;</span>
+              </button>
+            </div>
+            {/* Blog Dropdown */}
+            <div className="group flex items-center relative">
+              <span className="w-1 h-6 bg-yellow-400 mr-2 rounded hidden group-hover:block absolute left-0"></span>
+              <button
+                className="font-bold text-sm tracking-widest uppercase text-black flex items-center gap-1 hover:text-yellow-500 pl-3"
+                style={{ letterSpacing: "0.18em" }}
+              >
+                Blog
+                <span className="ml-1 text-xs">&#9660;</span>
+              </button>
+            </div>
           </div>
-        )}
+          {/* Divider */}
+          <div className="h-8 w-px bg-gray-200 mx-4"></div>
+          {/* Buttons */}
+          <a
+            href="#"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 rounded transition text-sm uppercase tracking-widest mr-2"
+            style={{ letterSpacing: "0.08em" }}
+          >
+            Get a Quote
+          </a>
+          <a
+            href="#"
+            className="bg-black hover:bg-gray-800 text-white font-bold px-6 py-2 rounded transition text-sm uppercase tracking-widest"
+            style={{ letterSpacing: "0.08em" }}
+          >
+            Sign In
+          </a>
+        </nav>
       </div>
     </header>
   );
